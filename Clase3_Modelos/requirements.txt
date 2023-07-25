@@ -7,3 +7,6 @@ psycopg2-binary>=2.8
 # Toolkit que permite aprovechar al máximo el uso interactivo de Python.
 # Muy útil cuando utilizemos el shell de Django.
 ipython==8.8.0
+# Librerías que permiten correr unitests.
+pytest-django==4.5.2
+pytest-json-report==1.5.0
