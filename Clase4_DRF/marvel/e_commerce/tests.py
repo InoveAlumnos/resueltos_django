@@ -38,7 +38,7 @@ def test_comic_create_api_view():
 
     response = client.post(endpoint_url, data=json.dumps(comic_data), content_type='application/json')
 
-    assert response.status_code == status.HTTP_201_CREATED, f'Endpoint incorrecto.'
+    assert response.status_code == status.HTTP_201_CREATED, f'La creación del comic falló. Status code: {response.status_code}'
 
     assert Comic.objects.filter(title='Inove').exists(), f'Comic no encontrado.'
 
@@ -60,7 +60,7 @@ def test_comic_list_api_view():
     response = client.get(endpoint_url)
 
     assert response.status_code == status.HTTP_200_OK
-    assert len(response.data) > 0, 'Se esperaba una lista con comics, al contrario, se obtuvo una lista vacía.'
+    assert response.data != [], 'Se esperaba una lista con comics, al contrario, se obtuvo una lista vacía.'
 
 
 
@@ -70,7 +70,7 @@ def test_comic_retrieve_api_view():
     client = APIClient()
     call_command('get_comics')
     
-    comic_id = 30
+    comic_id = 23
 
     endpoint_url = reverse('comic_retrieve_api_view') 
 
@@ -92,6 +92,6 @@ def test_comic_list_filtered_api_view():
     response = client.get(endpoint_url)
 
     assert response.status_code == status.HTTP_200_OK
-    assert len(response.data) > 0, 'Se esperaba una lista con comics, al contrario, se obtuvo una lista vacía.'
+    assert response.data != [], 'Se esperaba una lista con comics, al contrario, se obtuvo una lista vacía.'
     for comic in response.data:
         assert comic["price"] > 5.00, f'Se esperaba que el queryset contuviera comics filtrados por precio superior a 5.00, el presente comic posee un precio de {comic["price"]}.'
