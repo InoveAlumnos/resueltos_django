@@ -1,0 +1,1 @@
+# NOTE: Este archivo lo creamos para que Django tenga en cuenta este directorio dentro del proyecto!!!
