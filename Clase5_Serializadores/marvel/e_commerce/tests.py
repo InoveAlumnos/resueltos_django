@@ -127,7 +127,7 @@ def test_wishlist_api_view(client, create_user, create_comic):
     msg = f'La clase "{api_view_name}" no hereda de la Clase "ListCreateAPIView".'
     assert issubclass(views.WishListAPIView, ListCreateAPIView), msg
     endpoint = reverse('wishlist_class_api_view')
-    response = client.post(endpoint, json=data)
+    response = client.post(endpoint, data=json.dumps(data), content_type='application/json')
     msg = f'Endpoint "{endpoint}" no encontrado.'
     assert response != status.HTTP_404_NOT_FOUND, msg
     assert response != status.HTTP_405_METHOD_NOT_ALLOWED, 'Método HTTP no permitido.'
