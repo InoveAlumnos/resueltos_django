@@ -47,7 +47,14 @@ def test_user_list_api_view(client):
     assert hasattr(views, api_view_name), msg
     msg = f'La clase "{api_view_name}" no hereda de la Clase "ListAPIView".'
     assert issubclass(views.UserListAPIView, ListAPIView), msg
-    endpoint = reverse('user_class_list_api_view')
+    try:
+        endpoint = reverse('user_class_list_api_view')
+    except NoReverseMatch:
+        msg = (
+            'El parámetro "name" no se encuentra definido o no es el '
+            f'correcto cuando definió la URL de la view: {api_view_name}.'
+        )
+        assert False, msg
     response = client.get(endpoint)
     msg = f'Endpoint "{endpoint}" no encontrado.'
     assert response != status.HTTP_404_NOT_FOUND, msg
@@ -126,7 +133,15 @@ def test_wishlist_api_view(client, create_user, create_comic):
     assert hasattr(views, api_view_name), msg
     msg = f'La clase "{api_view_name}" no hereda de la Clase "ListCreateAPIView".'
     assert issubclass(views.WishListAPIView, ListCreateAPIView), msg
-    endpoint = reverse('wishlist_class_api_view')
+    view_namespace = 'wishlist_class_api_view'
+    try:
+        endpoint = reverse(view_namespace)
+    except NoReverseMatch:
+        msg = (
+            'El parámetro "name" no se encuentra definido o no es el '
+            f'correcto cuando definió la URL de la view: {api_view_name}.'
+        )
+        assert False, msg
     response = client.post(endpoint, data=json.dumps(data), content_type='application/json')
     msg = f'Endpoint "{endpoint}" no encontrado.'
     assert response != status.HTTP_404_NOT_FOUND, msg
