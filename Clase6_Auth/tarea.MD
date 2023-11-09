@@ -24,14 +24,18 @@ Recuerde que para poder comenzar a utilizar el Django Admin, es necesario que el
 Los comandos necesarios se encuentran detallados en el archivo README.md
 
 
-### 3. Realice la class-based API view para el Login del usuario.
+### 3. Agregar 'rest_framework.authtoken' en INSTALLED_APPS.
+Recuerde agregar 'rest_framework.authtoken' en INSTALLED_APPS dentro de settings.py para poder trabajar con los Tokens tal como fue visto en clase.
+
+
+### 4. Realice la class-based API view para el Login del usuario.
 Basado en el material visto en clase, incluido en la carpeta "ejemplos_clase" desarrolle una API view basada en clase para el login del usuario.
 La misma debe incluir la creación de un Token con su asignación al correspondiente usuario.
 Requisitos:
   - Su correspondiente URL debe poseer el 'name' = 'login'.
 
 
-### 4. Cree los serializadores.
+### 5. Cree los serializadores.
 Cree los serializadores tanto para el UserLogin como para el Token. 
 Debe crear un serializador llamado UserLoginSerializer y otro llamado TokenSerializer, ambos dentro del archivo serializers.py
 
@@ -42,7 +46,7 @@ Debe crear un serializador llamado UserLoginSerializer y otro llamado TokenSeria
     Debe poder serializar y/o deserializar los campos 'user' y 'token'.
 
 
-### 5 Realizar las vistas de API (class-based) para el modelo WishList, con permisos determinados.
+### 6 Realizar las vistas de API (class-based) para el modelo WishList, con permisos determinados.
 Debe realizar las siguientes vistas de API (class-based) necesarias para realizar el CRUD de la base de datos para la entidad "WishList". A dichas views, deberá asignarle los permisos aclarados a continuación, con las urls detalladas.
   -  GetWishListAPIView (GET) / endpoint: 'wishlist/<int:pk>/' / name: 'get_wishlist_api_view' / Permisos: IsAuthenticated - Autenticación: TokenAuthentication.
   -  PostWishListAPIView (POST) / endpoint: 'wishlist/create/' / name: 'post_wishlist_api_view' / Permisos: IsAuthenticated & IsAdminUser.
@@ -70,7 +74,7 @@ Recuerde utilizar el serializador creado la clase anterior.
   ```queryset.filter(user=self.request.user)```. Una vez hecho esto simplemente el método `.get_object()` se va a encargar de buscar el comic que coincida con el id pasado por parámetro de ese usuario.
 
 
-### 6. Instale Swagger para poder ver la documentación general de las APIs. 
+### 7. Instale Swagger para poder ver la documentación general de las APIs. 
 Basandose en la documentación de clase y el ejemplo brindado en "ejemplo_clase" instale Swagger para poder ver la documentación de sus APIs.
 
 
