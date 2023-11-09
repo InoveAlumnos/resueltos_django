@@ -25,7 +25,8 @@ Los comandos necesarios se encuentran detallados en el archivo README.md
 
 
 ### 3. Agregar 'rest_framework.authtoken' en INSTALLED_APPS.
-Recuerde agregar 'rest_framework.authtoken' en INSTALLED_APPS dentro de settings.py para poder trabajar con los Tokens tal como fue visto en clase.
+Revise la documentación de Django REST Framework para comprender como agregar correctamente 'rest_framework.authtoken' en INSTALLED_APPS para poder trabajar con los Tokens tal como fue visto en clase.
+https://www.django-rest-framework.org/api-guide/authentication/#tokenauthentication
 
 
 ### 4. Realice la class-based API view para el Login del usuario.
