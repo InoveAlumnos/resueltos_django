@@ -35,7 +35,7 @@ siguiente comando:
 En caso de no estar usando Docker basta con volver a instalar las dependencias que
 se encuentran en el archivo **requirements.txt** usando pip. (Fijarse el comando para instalarlo en el archivo **Dockerfile**).
 
-Corroborar que que esté agregada la librería en **INSTALLED_APPS** dentro del archivo de configuración del proyecto. Para seguir los pasos para que dicha librería funcione tiene acá la documentación: [django_filtes](https://django-filter.readthedocs.io/en/latest/guide/rest_framework.html#quickstart)
+Corroborar que que esté agregada la librería en **INSTALLED_APPS** dentro del archivo de configuración del proyecto. Para seguir los pasos para que dicha librería funcione tiene acá la documentación: [django_filter](https://django-filter.readthedocs.io/en/latest/guide/rest_framework.html#quickstart)
 
 
 ### 4. Desarrollar una única view que permita realizar una API y que responda a un CRUD del modelo WishList.
