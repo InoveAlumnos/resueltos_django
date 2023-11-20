@@ -31,6 +31,7 @@ siguiente comando:
 **$** `docker-compose build`
 En caso de no estar usando Docker basta con volver a instalar las dependencias que
 se encuentran en el archivo **requirements.txt** usando pip. (Fijarse el comando para instalarlo en el archivo **Dockerfile**).
+Corroborar que que esté agregada la librería en **INSTALLED_APPS** dentro del archivo de configuración del proyecto.
 
 
 ### 4. Desarrollar una única view que permita realizar una API y que responda a un CRUD del modelo WishList.
