@@ -16,6 +16,7 @@ Recuerde que no debe subir la base de datos al sistema, para ello se encuentra e
 
 ### 1. Utilizar el proyecto de "Marvel" visto en clase.
 Inicializar el contenedor de docker, compilar la imagen del repositorio con:
+
 **$** `docker-compose up` 
 
 
@@ -28,10 +29,13 @@ Los comandos necesarios se encuentran detallados en el archivo README.md
 Revise en el archivo **requirements.txt** si se encuentra agregada, caso contrario,
 debe agregarla. Luego, si está usando Docker, debe detener los contenedores y ejecutar el
 siguiente comando:
+
 **$** `docker-compose build`
+
 En caso de no estar usando Docker basta con volver a instalar las dependencias que
 se encuentran en el archivo **requirements.txt** usando pip. (Fijarse el comando para instalarlo en el archivo **Dockerfile**).
-Corroborar que que esté agregada la librería en **INSTALLED_APPS** dentro del archivo de configuración del proyecto.
+
+Corroborar que que esté agregada la librería en **INSTALLED_APPS** dentro del archivo de configuración del proyecto. Para seguir los pasos para que dicha librería funcione tiene acá la documentación: [django_filtes](https://django-filter.readthedocs.io/en/latest/guide/rest_framework.html#quickstart)
 
 
 ### 4. Desarrollar una única view que permita realizar una API y que responda a un CRUD del modelo WishList.
