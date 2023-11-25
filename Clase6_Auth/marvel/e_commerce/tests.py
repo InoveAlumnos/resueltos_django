@@ -106,9 +106,9 @@ def test_get_wishlist_api_view_permissions(create_user, create_wishlist):
         
     # Testeamos que el usuario NO autenticado (y SIN token) NO tenga acceso
     response = client.get(url)
-    assert response.status_code != 404, 'Endpoint no encontrado'
     assert response.status_code != status.HTTP_401_UNAUTHORIZED, 'El endpoint debería ser accesible sin autenticación.'
     assert response.status_code != status.HTTP_403_FORBIDDEN, 'El endpoint debería ser accesible sin Permisos (AllowAny).'
+    assert response.status_code != 404, 'Endpoint o elemento no encontrado'
     assert response.status_code == status.HTTP_200_OK, f'La petición fue realizada pero algo falló en la petición, error: {response.status_code}.'
 
 
@@ -142,9 +142,9 @@ def test_post_wishlist_api_view_permissions(create_user, create_comic):
     # Testeamos que un usuario normal tenga acceso
     client.force_authenticate(user=user)
     response = client.post(url, wishlist_data)
-    assert response.status_code != 404, 'Endpoint no encontrado'
     assert response.status_code != status.HTTP_401_UNAUTHORIZED, 'El endpoint debe poder ser accedido usando autenticación básica.'
     assert response.status_code != status.HTTP_403_FORBIDDEN, 'Un usuario normal debería ser poder realizar la request.'
+    assert response.status_code != 404, 'Endpoint o elemento no encontrado'
     assert response.status_code == status.HTTP_201_CREATED, f'La petición fue realizada pero algo falló en la petición, error: {response.status_code}.'
     
     # Testeamos que un Admin User tenga acceso
@@ -179,7 +179,7 @@ def test_update_wishlist_api_view_permissions(create_user, create_wishlist):
     # Testeamos que un usuario NO autenticado NO tenga acceso
     client.force_authenticate(user=None)
     response = client.patch(url, {'wished_qty': 9})
-    assert response.status_code != 404, 'Endpoint no encontrado'
+    assert response.status_code != 404, 'Endpoint o elemento no encontrado'
     assert response.status_code == status.HTTP_403_FORBIDDEN or response.status_code == status.HTTP_401_UNAUTHORIZED, 'El endpoint NO debería ser accesible sin estar autenticado con Token.'
 
 
@@ -222,7 +222,7 @@ def test_delete_wishlist_api_view_permissions(create_user, create_wishlist):
     # Testeamos que un usuario normal no tenga acceso
     client.force_authenticate(user=user)
     response = client.delete(url)
-    assert response.status_code != 404, 'Endpoint no encontrado'
+    assert response.status_code != 404, 'Endpoint o elemento no encontrado'
     assert response.status_code == status.HTTP_403_FORBIDDEN, 'El endpoint NO debería ser accesible por un usuario normal.'
     
     # Testeamos que un usuario Admin tenga acceso
