@@ -29,7 +29,7 @@ def test_login_user_api_view_post_only():
             f'correcto cuando definió la URL de la view: {api_view_name}.'
         )
         assert False, msg
-        
+
     # Tratamos de hacer una request de tipo GET
     response = client.get(endpoint_url)
 
@@ -94,8 +94,7 @@ def test_get_wishlist_api_view_permissions(create_user, create_wishlist):
     
     # Primero necesitamos la wishlist:
     wishlist = create_wishlist(user=user)
-    
-    token, created = Token.objects.get_or_create(user=user)
+
     try:
         url = reverse('get_wishlist_api_view', kwargs={'pk': wishlist.id})
     except NoReverseMatch:
@@ -107,15 +106,13 @@ def test_get_wishlist_api_view_permissions(create_user, create_wishlist):
         
     # Testeamos que el usuario NO autenticado (y SIN token) NO tenga acceso
     response = client.get(url)
-    assert response.status_code == status.HTTP_401_UNAUTHORIZED, 'El endpoint NO debería ser accesible sin Token.'
-    
-    # Testeamos que el usuario autenticado con Token tenga acceso
-    client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
-    response = client.get(url)
-    assert response.status_code == status.HTTP_200_OK, 'El endpoint debería ser accesible con un Token válido.'
+    assert response.status_code != status.HTTP_401_UNAUTHORIZED, 'El endpoint debería ser accesible sin autenticación.'
+    assert response.status_code != status.HTTP_403_FORBIDDEN, 'El endpoint debería ser accesible sin Permisos (AllowAny).'
+    assert response.status_code != 404, 'Endpoint o elemento no encontrado'
+    assert response.status_code == status.HTTP_200_OK, f'La petición fue realizada pero algo falló en la petición, error: {response.status_code}.'
 
 
-# Para PostWishListAPIView (Permisos: IsAuthenticated & IsAdminUser)
+# Para PostWishListAPIView (Permisos: IsAuthenticated; Autenticacion: BasicAuthentication)
 @pytest.mark.django_db
 def test_post_wishlist_api_view_permissions(create_user, create_comic):
     api_view_name = "PostWishListAPIView"
@@ -142,21 +139,26 @@ def test_post_wishlist_api_view_permissions(create_user, create_comic):
         )
         assert False, msg
         
-    # Testeamos que un usuario normal no tenga acceso
+    # Testeamos que un usuario normal tenga acceso
     client.force_authenticate(user=user)
     response = client.post(url, wishlist_data)
-    assert response.status_code == status.HTTP_403_FORBIDDEN, 'El endpoint NO debería ser accesible sin estar autenticado.'
+    assert response.status_code != status.HTTP_401_UNAUTHORIZED, 'El endpoint debe poder ser accedido usando autenticación básica.'
+    assert response.status_code != status.HTTP_403_FORBIDDEN, 'Un usuario normal debería ser poder realizar la request.'
+    assert response.status_code != 404, 'Endpoint o elemento no encontrado'
+    assert response.status_code == status.HTTP_201_CREATED, f'La petición fue realizada pero algo falló en la petición, error: {response.status_code}.'
     
     # Testeamos que un Admin User tenga acceso
     admin_user = User.objects.create_superuser(username='admin_user', password='adminpass')
     client.force_authenticate(user=admin_user)
     
     response = client.post(url, wishlist_data)
-    assert response.status_code == status.HTTP_201_CREATED, 'Un usuario Admin o Superuser debería poder realizar la request POST.'
+    assert response.status_code != status.HTTP_401_UNAUTHORIZED, 'El endpoint debe poder ser accedido usando autenticación básica.'
+    assert response.status_code != status.HTTP_403_FORBIDDEN, 'Un usuario Admin o Superuser debería poder realizar la request POST.'
+    assert response.status_code == status.HTTP_201_CREATED, f'La petición fue realizada pero algo falló en la petición, error: {response.status_code}.'
 
 
 
-# Para UpdateWishListAPIView (Permisos: IsAuthenticated | IsAdminUser)
+# Para UpdateWishListAPIView (Permisos: IsAuthenticated | IsAdminUser; Autenticacion: TokenAuthentication)
 @pytest.mark.django_db
 def test_update_wishlist_api_view_permissions(create_user, create_wishlist):
     api_view_name = "UpdateWishListAPIView"
@@ -164,7 +166,7 @@ def test_update_wishlist_api_view_permissions(create_user, create_wishlist):
     user = create_user(username="random2")
     
     wishlist = create_wishlist(user=user)
-    
+
     try:
         url = reverse('update_wishlist_api_view', kwargs={'pk': wishlist.id})
     except NoReverseMatch:
@@ -174,27 +176,33 @@ def test_update_wishlist_api_view_permissions(create_user, create_wishlist):
         )
         assert False, msg
         
-    # Testeamos que un usuario no autenticado no tenga acceso
+    # Testeamos que un usuario NO autenticado NO tenga acceso
     client.force_authenticate(user=None)
     response = client.patch(url, {'wished_qty': 9})
-    assert response.status_code == status.HTTP_403_FORBIDDEN, 'El endpoint NO debería ser accesible sin estar autenticado.'
-    
-    # Testeamos que un usuario autenticado tenga acceso
-    client.force_authenticate(user=user)
+    assert response.status_code != 404, 'Endpoint o elemento no encontrado'
+    assert response.status_code == status.HTTP_403_FORBIDDEN or response.status_code == status.HTTP_401_UNAUTHORIZED, 'El endpoint NO debería ser accesible sin estar autenticado con Token.'
+
+
+    # Testeamos que un usuario normal autenticado con Token tenga acceso
+    token, created = Token.objects.get_or_create(user=user)
+    client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
     response = client.patch(url, {'wished_qty': 3})
-    assert response.status_code == status.HTTP_200_OK, 'Un usuario autenticado debería tener acceso a este endpoint.'
-    
-    # Testeamos que un usuario Admin tenga acceso
+    assert response.status_code != status.HTTP_401_UNAUTHORIZED, 'El endpoint debe poder ser accedido usando Token.'
+    assert response.status_code != status.HTTP_403_FORBIDDEN, 'Un usuario autenticado con Token debería tener acceso a este endpoint.'
+    assert response.status_code == status.HTTP_200_OK, f'La petición fue realizada pero algo falló en la petición, error: {response.status_code}.'
+
+
+    # Testeamos que un usuario Admin autenticado con Token tenga acceso
     admin_user = User.objects.create_superuser(username='admin_user2', password='adminpass')
-    client.force_authenticate(user=admin_user)
-    
+    token, created = Token.objects.get_or_create(user=admin_user)
+    client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
     response = client.patch(url, {'wished_qty': 4})
-    assert response.status_code == status.HTTP_200_OK, 'Un superuser debería tener acceso a este endpoint.'
-    
+    assert response.status_code != status.HTTP_401_UNAUTHORIZED, 'El endpoint debe poder ser accedido usando Token.'
+    assert response.status_code != status.HTTP_403_FORBIDDEN, 'Un superuser autenticado con Tokendebería tener acceso a este endpoint.'
+    assert response.status_code == status.HTTP_200_OK, f'La petición fue realizada pero algo falló en la petición, error: {response.status_code}.'
 
 
-
-# Para DeleteWishListAPIView (Permisos: IsAdminUser)
+# # Para DeleteWishListAPIView (Permisos: IsAdminUser; Autenticacion: TokenAuthentication)
 @pytest.mark.django_db
 def test_delete_wishlist_api_view_permissions(create_user, create_wishlist):
     api_view_name = "DeleteWishListAPIView"
@@ -210,14 +218,16 @@ def test_delete_wishlist_api_view_permissions(create_user, create_wishlist):
             f'correcto cuando definió la URL de la view: {api_view_name}.'
         )
         assert False, msg
-        
+
     # Testeamos que un usuario normal no tenga acceso
     client.force_authenticate(user=user)
     response = client.delete(url)
-    assert response.status_code == status.HTTP_403_FORBIDDEN, 'El endpoint NO debería ser accesible sin estar autenticado.'
+    assert response.status_code != 404, 'Endpoint o elemento no encontrado'
+    assert response.status_code == status.HTTP_403_FORBIDDEN, 'El endpoint NO debería ser accesible por un usuario normal.'
     
     # Testeamos que un usuario Admin tenga acceso
     admin_user = User.objects.create_superuser(username='admin_user3', password='adminpass')
     client.force_authenticate(user=admin_user)
     response = client.delete(url)
-    assert response.status_code == status.HTTP_204_NO_CONTENT, 'Un superuser debería tener acceso a este endpoint.'
+    assert response.status_code != status.HTTP_403_FORBIDDEN, 'Un superuser debería tener acceso a este endpoint.'
+    assert response.status_code == status.HTTP_204_NO_CONTENT, f'La petición fue realizada pero algo falló en la petición, error: {response.status_code}.'

@@ -3,7 +3,7 @@ from django.forms.models import model_to_dict
 from django.shortcuts import get_object_or_404
 
 from rest_framework import status
-from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import TokenAuthentication, BasicAuthentication
 from rest_framework.decorators import api_view
 # (GET - ListAPIView) Listar todos los elementos en la entidad:
 # (POST - CreateAPIView) Inserta elementos en la DB
@@ -25,7 +25,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework.validators import ValidationError
 from rest_framework.views import APIView
-from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import TokenAuthentication, BasicAuthentication
 
 # NOTE: Importamos este decorador para poder customizar los 
 # parámetros y responses en Swagger, para aquellas
@@ -394,8 +394,8 @@ class GetWishListAPIView(ListAPIView):
     '''
     queryset = WishList.objects.all()
     serializer_class = WishListSerializer
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
+    permission_classes = (AllowAny,)
+    authentication_classes = ()
 
 
 class PostWishListAPIView(CreateAPIView):
@@ -405,7 +405,8 @@ class PostWishListAPIView(CreateAPIView):
     '''
     queryset = WishList.objects.all()
     serializer_class = WishListSerializer
-    permission_classes = [IsAuthenticated & IsAdminUser]
+    authentication_classes = (BasicAuthentication,)
+    permission_classes = (IsAuthenticated,)
     
     
 class UpdateWishListAPIView(UpdateAPIView):
@@ -416,7 +417,8 @@ class UpdateWishListAPIView(UpdateAPIView):
     '''
     queryset = WishList.objects.all()
     serializer_class = WishListSerializer
-    permission_classes = [IsAuthenticated | IsAdminUser]
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated | IsAdminUser,)
 
 
 class DeleteWishListAPIView(DestroyAPIView):
@@ -427,4 +429,5 @@ class DeleteWishListAPIView(DestroyAPIView):
     '''
     queryset = WishList.objects.all()
     serializer_class = WishListSerializer
-    permission_classes = [IsAdminUser]
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAdminUser,)
