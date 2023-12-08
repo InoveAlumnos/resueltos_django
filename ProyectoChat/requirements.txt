@@ -10,4 +10,3 @@ ipython==8.8.0
 # Librerías que permiten correr unitests.
 pytest-django==4.5.2
 pytest-json-report==1.5.0
-pytest-ordering==0.6

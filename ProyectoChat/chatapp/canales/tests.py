@@ -11,26 +11,12 @@ from rest_framework.viewsets import ModelViewSet
 from pytest_fixtures import *
 from canales import models
 
-@pytest.mark.run(order=1)
-@pytest.mark.django_db
-def test_model_chat(client):
+@pytest.mark.django_db()
+def test_model_chat(create_chat):
     assert hasattr(models, 'Chat'), "El modelo Chat no está definido en models"
 
-    # Verificar que le modelo puede ser creado
-    # como se especifico
-    try:
-        _chat = models.Chat.objects.create(
-            nombre="Mi chat"
-        )
-    except:
-        _chat = None
-    
-    _msg = "No se ha podido crear un objeto Chat con los campos especificados en el enunciado"
-    assert _chat is not None, _msg
-
-@pytest.mark.run(order=2)
-@pytest.mark.django_db
-def test_model_mensaje(client, create_user, create_chat):
+@pytest.mark.django_db()
+def test_model_mensaje(create_user, create_chat):
     assert hasattr(models, 'Mensaje'), "El modelo Mensaje no está definido en models"
 
     _user = create_user()
@@ -50,8 +36,7 @@ def test_model_mensaje(client, create_user, create_chat):
     _msg = "No se ha podido crear un objeto Mensaje con los campos especificados en el enunciado"
     assert _mensaje is not None, _msg
 
-@pytest.mark.run(order=3)
-@pytest.mark.django_db
+@pytest.mark.django_db()
 def test_chats(client, create_user, get_token):
     assert hasattr(models, 'Chat'), "El modelo Chat no está definido en models"
     assert hasattr(models, 'Mensaje'), "El modelo Mensaje no está definido en models"
@@ -153,9 +138,7 @@ def test_chats(client, create_user, get_token):
     assert isinstance(_data, dict), _msg
     assert _data == _chat, _msg
 
-
-@pytest.mark.run(order=4)
-@pytest.mark.django_db
+@pytest.mark.django_db()
 def test_mensajes(client, create_user, create_chat, get_token):
     assert hasattr(models, 'Chat'), "El modelo Chat no está definido en models"
     assert hasattr(models, 'Mensaje'), "El modelo Mensaje no está definido en models"
@@ -226,8 +209,7 @@ def test_mensajes(client, create_user, create_chat, get_token):
         _msg = f'El campo "chat" tiene que ser un ID. chat: {_result.get("chat")}'
         assert isinstance(_result.get('chat'), int), _msg
 
-@pytest.mark.run(order=5)
-@pytest.mark.django_db
+@pytest.mark.django_db()
 def test_chat_mensajes_get(client, create_chat, create_user, get_token, serialize_mensaje):
     assert hasattr(models, 'Chat'), "El modelo Chat no está definido en models"
     assert hasattr(models, 'Mensaje'), "El modelo Mensaje no está definido en models"
@@ -284,8 +266,7 @@ def test_chat_mensajes_get(client, create_chat, create_user, get_token, serializ
         _msg = f"El mensaje {_result} debe ser retornando al filtrar por chat_id {_chat_id}"
         assert _mensaje_encontrado, _msg
 
-@pytest.mark.run(order=6)
-@pytest.mark.django_db
+@pytest.mark.django_db()
 def test_chat_mensajes_user_get(client, create_chat, create_user, get_token, serialize_mensaje):
     assert hasattr(models, 'Chat'), "El modelo Chat no está definido en models"
     assert hasattr(models, 'Mensaje'), "El modelo Mensaje no está definido en models"
