@@ -69,8 +69,8 @@ class ChatMensajesAPIView(ListAPIView):
     serializer_class = MensajeSerializer
     
     def get_queryset(self):
-        chat_id = self.kwargs['pk']
-        queryset = self.queryset.filter(id=chat_id)
+        chat_id = self.kwargs['chat_id']
+        queryset = self.queryset.filter(chat_id=chat_id)
         return queryset
 
 
@@ -79,7 +79,7 @@ class ChatMensajesUserAPIView(ListAPIView):
     serializer_class = MensajeSerializer
     
     def get_queryset(self):
-        chat_id = self.kwargs['pk']
+        chat_id = self.kwargs['chat_id']
         username = self.kwargs['username']
-        queryset = self.queryset.filter(id=chat_id, user__username=username)
+        queryset = self.queryset.filter(chat_id=chat_id, user__username=username)
         return queryset

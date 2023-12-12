@@ -12,8 +12,20 @@ from pytest_fixtures import *
 from canales import models
 
 @pytest.mark.django_db()
-def test_model_chat(create_chat):
+def test_model_chat():
     assert hasattr(models, 'Chat'), "El modelo Chat no está definido en models"
+
+    # Verificar que le modelo puede ser creado
+    # como se especifico
+    try:
+        _chat = models.Chat.objects.create(
+            nombre="Chat prueba",
+        )
+    except:
+        _chat = None
+
+    _msg = "No se ha podido crear un objeto Chat con los campos especificados en el enunciado"
+    assert _chat is not None, _msg
 
 @pytest.mark.django_db()
 def test_model_mensaje(create_user, create_chat):
@@ -286,9 +298,10 @@ def test_chat_mensajes_user_get(client, create_chat, create_user, get_token, ser
             info[_chat.id].append(serialize_mensaje(mensaje))
     
     _chat_id, _mensajes = list(info.items())[0]
-    _user_id = _mensajes[0]['user']
+    _user_id = _user1.id
+    _username = _user1.username
     _mensajes = [x for x in _mensajes if x['user'] == _user_id]
-    endpoint = f'/api/chats/{_chat_id}/mensajes/{_user_id}/'
+    endpoint = f'/api/chats/{_chat_id}/mensajes/{_username}/'
     
     response = client.get(endpoint)
     _msg = (
@@ -322,5 +335,5 @@ def test_chat_mensajes_user_get(client, create_chat, create_user, get_token, ser
                 _mensaje_encontrado = True
                 break
         
-        _msg = f"El mensaje {_result} debe ser retornando al filtrar por chat_id {_chat_id} y user_id {_user_id}"
+        _msg = f"El mensaje {_result} debe ser retornando al filtrar por chat_id {_chat_id} y username {_username}"
         assert _mensaje_encontrado, _msg

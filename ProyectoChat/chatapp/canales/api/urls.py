@@ -12,14 +12,14 @@ urlpatterns = [
     
     # Chat-Mensajes:
     path(
-        'chats/<int:pk>/mensajes/',
+        'chats/<int:chat_id>/mensajes/',
         ChatMensajesAPIView.as_view(),
         name='chat-list-mensajes'
     ),
     
     # Chat-Mensajes-usuario:
     path(
-        'chats/<int:pk>/mensajes/<str:username>/',
+        'chats/<int:chat_id>/mensajes/<str:username>/',
         ChatMensajesUserAPIView.as_view(),
         name='chat-list-mensajes-usuario'
     ),
