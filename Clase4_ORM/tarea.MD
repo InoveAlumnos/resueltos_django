@@ -4,7 +4,7 @@ info@inove.com.ar\
 Web: [Inove](http://inove.com.ar)
 
 ---
-# Tarea: Django - Modelos y Administrador
+# Tarea: Django ORM
 
 Al realizar esta tarea pondremos en práctica los conocimientos adquiridos en clase.
 Una vez finalizada, el alumno debe subir el enlace a su repositorio "forkeado" el foro de tarea correspondiente -NO SE ADMITE LA DEVOLUCIÓN POR OTRO CANAL SALVO SE ESPECIFIQUE LO CONTRARIO- 
@@ -65,6 +65,42 @@ Esta view ya está configurada y el endpoint que se le adjudicó (la URL) es:\
 
 Su vista deberá retorna un JSON con todos los comics listados en su base de datos, para ello:
 1 - Deberá utilizar el ORM de Django para obtener todos los datos diponibles del modelo "Comic".
+2 - De la queryset obtenida en el punto anterior deberá utilizar el método "values" para a serializar sus datos y transformarlos en una lista de diccionarios.
+3 - Deberá retornar los datos con un JsonResponse utilizando el parámetro data.
+4 - Una vez completado los puntos anteriors, ingresar al endpoint desde su explorador web a la URL correspondiente y verificar que los datos han sido retornado como era esperado.
+
+### 5. Completar la view llamada "comic_filter_stock_api_view()"
+Deberá compeltar una view basada en una función llamada "comic_filter_stock_api_view()", que se encuentra en el archivo "views.py" dentro de e-commerce.
+
+Esta view ya está configurada y el endpoint que se le adjudicó (la URL) es:\
+`http://127.0.0.1:8000/e-commerce/comic-filter-stock/`.
+
+Su vista deberá retorna un JSON con todos los comics listados en su base de datos filtrados por stock, para ello:
+1 - Deberá utilizar el ORM de Django para obtener todos los datos diponibles del modelo "Comic", pero, en esta query debe filtrar y traer de la base de datos unicamente aquellos comics cuyo "stock_qty" sea igual a "5".
+2 - De la queryset obtenida en el punto anterior deberá utilizar el método "values" para a serializar sus datos y transformarlos en una lista de diccionarios.
+3 - Deberá retornar los datos con un JsonResponse utilizando el parámetro data.
+4 - Una vez completado los puntos anteriors, ingresar al endpoint desde su explorador web a la URL correspondiente y verificar que los datos han sido retornado como era esperado.
+
+### 6. Completar la view llamada "comic_filter_price_api_view()"
+Deberá compeltar una view basada en una función llamada "comic_filter_price_api_view()", que se encuentra en el archivo "views.py" dentro de e-commerce.
+
+Esta view ya está configurada y el endpoint que se le adjudicó (la URL) es:\
+`http://127.0.0.1:8000/e-commerce/comic-filter-price/`.
+
+Su vista deberá retorna un JSON con todos los comics listados en su base de datos filtrados por stock, para ello:
+1 - Deberá utilizar el ORM de Django para obtener todos los datos diponibles del modelo "Comic", pero, en esta query debe filtrar y traer de la base de datos unicamente aquellos comics cuyo "price" sea mayor a "3".
+2 - De la queryset obtenida en el punto anterior deberá utilizar el método "values" para a serializar sus datos y transformarlos en una lista de diccionarios.
+3 - Deberá retornar los datos con un JsonResponse utilizando el parámetro data.
+4 - Una vez completado los puntos anteriors, ingresar al endpoint desde su explorador web a la URL correspondiente y verificar que los datos han sido retornado como era esperado.
+
+### 7. Completar la view llamada "comic_list_order_api_view()"
+Deberá compeltar una view basada en una función llamada "comic_list_order_api_view()", que se encuentra en el archivo "views.py" dentro de e-commerce.
+
+Esta view ya está configurada y el endpoint que se le adjudicó (la URL) es:\
+`http://127.0.0.1:8000/e-commerce/comic-list-order/`.
+
+Su vista deberá retorna un JSON con todos los comics listados en su base de datos filtrados por stock, para ello:
+1 - Deberá utilizar el ORM de Django para obtener todos los datos diponibles del modelo "Comic", pero, en esta query debe order los resultados por el campo "marvel_id" de menor a mayor.
 2 - De la queryset obtenida en el punto anterior deberá utilizar el método "values" para a serializar sus datos y transformarlos en una lista de diccionarios.
 3 - Deberá retornar los datos con un JsonResponse utilizando el parámetro data.
 4 - Una vez completado los puntos anteriors, ingresar al endpoint desde su explorador web a la URL correspondiente y verificar que los datos han sido retornado como era esperado.
