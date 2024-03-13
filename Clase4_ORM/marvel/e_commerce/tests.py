@@ -43,7 +43,7 @@ def test_comic_filter_stock(client, create_list_of_comic):
 
     print(f"Cuantos comics retornó el enpdoint en la lista: {len(data)}")
     assert len(data), 'La lista de comics no debe estar vacía'
-    
+
     for comic in data:
         assert comic['stock_qty'] == 5, 'El stock de cada comic retornado debe ser 5'
 
@@ -64,7 +64,7 @@ def test_comic_filter_price(client, create_list_of_comic):
 
     print(f"Cuantos comics retornó el enpdoint en la lista: {len(data)}")
     assert len(data), 'La lista de comics no debe estar vacía'
-    
+
     for comic in data:
         assert comic['price'] > 3, 'El precio de cada comic retornado debe ser mayor a 3'
 
