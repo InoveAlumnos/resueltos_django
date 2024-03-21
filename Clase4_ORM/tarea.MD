@@ -87,7 +87,7 @@ Deberá compeltar una view basada en una función llamada "comic_filter_price_ap
 Esta view ya está configurada y el endpoint que se le adjudicó (la URL) es:\
 `http://127.0.0.1:8000/e-commerce/comic-filter-price/`.
 
-Su vista deberá retorna un JSON con todos los comics listados en su base de datos filtrados por stock, para ello:
+Su vista deberá retorna un JSON con todos los comics listados en su base de datos filtrados por precio, para ello:
 1 - Deberá utilizar el ORM de Django para obtener todos los datos diponibles del modelo "Comic", pero, en esta query debe filtrar y traer de la base de datos unicamente aquellos comics cuyo "price" sea mayor a "3".
 2 - De la queryset obtenida en el punto anterior deberá utilizar el método "values" para a serializar sus datos y transformarlos en una lista de diccionarios.
 3 - Deberá retornar los datos con un JsonResponse utilizando el parámetro data.
@@ -99,7 +99,7 @@ Deberá compeltar una view basada en una función llamada "comic_list_order_api_
 Esta view ya está configurada y el endpoint que se le adjudicó (la URL) es:\
 `http://127.0.0.1:8000/e-commerce/comic-list-order/`.
 
-Su vista deberá retorna un JSON con todos los comics listados en su base de datos filtrados por stock, para ello:
+Su vista deberá retorna un JSON con todos los comics listados en su base de datos ordenados por marvel_id, para ello:
 1 - Deberá utilizar el ORM de Django para obtener todos los datos diponibles del modelo "Comic", pero, en esta query debe order los resultados por el campo "marvel_id" de menor a mayor.
 2 - De la queryset obtenida en el punto anterior deberá utilizar el método "values" para a serializar sus datos y transformarlos en una lista de diccionarios.
 3 - Deberá retornar los datos con un JsonResponse utilizando el parámetro data.
