@@ -1,18 +1,14 @@
 import json
 import pytest
+from pytest_fixtures import *
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 from .models import Comic
 
-from django.core.management import call_command
-
 # Testeamos que sea una POST request y no GET:
 @pytest.mark.django_db
-def test_comic_create_api_view_post_only():
-
-    client = APIClient()
-
+def test_comic_create_api_view_post_only(client):
     endpoint_url = reverse('comic_create_api_view') 
 
     response = client.get(endpoint_url)
@@ -21,9 +17,7 @@ def test_comic_create_api_view_post_only():
 
 # Testeamos que la vista creada por el alumno para crear un Comic, efectivamente cree el comic
 @pytest.mark.django_db
-def test_comic_create_api_view():
-
-    client = APIClient()
+def test_comic_create_api_view(client):
 
     endpoint_url = reverse('comic_create_api_view') 
 
@@ -50,10 +44,9 @@ def test_comic_create_api_view():
 
 # Testeamos que la vista creada por el alumno permita listar los comics
 @pytest.mark.django_db
-def test_comic_list_api_view():
-    client = APIClient()
-    
-    call_command('get_comics')
+def test_comic_list_api_view(client, create_list_of_comic):
+
+    create_list_of_comic()
     
     endpoint_url = reverse('comic_list_api_view') 
 
@@ -66,9 +59,8 @@ def test_comic_list_api_view():
 
 # Testeamos que la vista creada por el alumno permita obtener un comic por id
 @pytest.mark.django_db
-def test_comic_retrieve_api_view():
-    client = APIClient()
-    call_command('get_comics')
+def test_comic_retrieve_api_view(client, create_list_of_comic):
+    create_list_of_comic()
     
     comic_id = Comic.objects.first().id
 
@@ -82,10 +74,8 @@ def test_comic_retrieve_api_view():
 
 # Testeamos que la vista creada por el alumno permita listar los comics con precio superior a 5.00
 @pytest.mark.django_db
-def test_comic_list_filtered_api_view():
-    client = APIClient()
-    
-    call_command('get_comics')
+def test_comic_list_filtered_api_view(client, create_list_of_comic):
+    create_list_of_comic()
     
     endpoint_url = reverse('comic_list_filtered_api_view') 
 
